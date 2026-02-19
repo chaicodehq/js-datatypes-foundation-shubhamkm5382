@@ -52,20 +52,60 @@
  */
 export function getItemNames(items) {
   // Your code here
+  if (!Array.isArray(items)) {
+    return [];
+  }
+  return items.map((item) => item?.name);
 }
 
 export function getAffordableItems(items, maxPrice) {
   // Your code here
+  if (!Array.isArray(items) || typeof maxPrice !== "number") {
+    return [];
+  }
+  return items.filter(
+    (item) => typeof item?.price === "number" && item.price <= maxPrice,
+  );
 }
 
 export function calculateTotal(items) {
   // Your code here
+  if (!Array.isArray(items) || items.length === 0) {
+    return 0;
+  }
+  return items.reduce((total, item) => {
+    const price = typeof item?.price === "number" ? item.price : 0;
+    const qty = typeof item?.qty === "number" ? item.qty : 0;
+    return total + price * qty;
+  }, 0);
 }
 
 export function sortByPrice(items, ascending) {
   // Your code here
+  if (!Array.isArray(items)) {
+    return [];
+  }
+  const copy = [...items];
+  return copy.sort((a, b) => {
+    const priceA = typeof a?.price === "number" ? a.price : 0;
+    const priceB = typeof b?.price === "number" ? b.price : 0;
+
+    return ascending ? priceA - priceB : priceB - priceA;
+  });
 }
 
 export function formatBill(items) {
   // Your code here
+  if (!Array.isArray(items) || items.length === 0) {
+    return "";
+  }
+  return items
+    .map((item) => {
+      const name = item?.name ?? "";
+      const price = typeof item?.price === "number" ? item.price : 0;
+      const qty = typeof item?.qty === "number" ? item.qty : 0;
+      const total = price * qty;
+      return `${name} x ${qty} = Rs.${total}`;
+    })
+    .join("\n");
 }
